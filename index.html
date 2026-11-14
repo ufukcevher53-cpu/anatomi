@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex"><title>3D Anatomi · Hastalığını gör</title>
+<meta name="robots" content="noindex"><title>Creamodul Anatomi · Hastalığını yaz, vücudunda gör</title>
+<meta name="description" content="Hastalar, doktorlar ve tıp öğrencileri için 3D hastalık anlatımı. Hastalığı yazın, organda adım adım görün.">
 <style>
 *{box-sizing:border-box;margin:0}html,body{height:100%;overflow:hidden;background:#0B1220;color:#E6EDF7;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 #c{position:fixed;inset:0;display:block;touch-action:none}
@@ -38,21 +39,28 @@
 #shl{width:100%;margin-top:12px;background:#0B1220;border:1px solid #24324A;color:#BFD3F2;border-radius:10px;padding:9px;font-size:12px}
 .shr{display:flex;gap:8px;margin-top:10px}.shr button{flex:1;border:0;border-radius:10px;padding:11px;font-weight:700;background:#3B82F6;color:#fff}.shr button+button{background:#24324A}
 .x{border:0;background:#1B2A44;color:#fff;width:32px;height:32px;border-radius:50%;font-size:16px;flex:none}
-.hint{position:fixed;left:0;right:0;bottom:38px;text-align:center;color:#8FA3BF;font-size:13px;z-index:4;pointer-events:none}
+.hint{position:fixed;left:0;right:0;top:122px;text-align:center;color:#8FA3BF;font-size:13px;z-index:4;pointer-events:none}
 .load{position:fixed;inset:0;display:grid;place-items:center;z-index:9;background:#0B1220;font-weight:700;color:#8FA3BF}
 .lic{position:fixed;right:10px;bottom:6px;z-index:3;font-size:10px;color:#4E6180;max-width:260px;text-align:right;line-height:1.3}
 .lic a{color:#7C93B5}
+.tip{position:fixed;z-index:6;transform:translate(-50%,-140%);background:#3B82F6;color:#fff;font-size:13px;font-weight:700;padding:6px 10px;border-radius:10px;pointer-events:none;display:none;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.toast{position:fixed;left:50%;top:128px;transform:translateX(-50%);z-index:6;background:rgba(17,26,43,.95);border:1px solid #24324A;color:#BFD3F2;font-size:12.5px;padding:7px 12px;border-radius:999px;display:none}.toast.on{display:block}
+.wel{position:fixed;left:12px;right:12px;bottom:56px;z-index:4;background:rgba(17,26,43,.92);border:1px solid #24324A;border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+.wel h3{font-size:16px;margin:0 0 6px}.wel p{font-size:13px;line-height:1.45;color:#BFD3F2;margin:0 0 10px}.wel small{display:block;font-size:11px;color:#6F84A5;margin-top:8px}
+.wch{display:flex;flex-wrap:wrap;gap:6px}.wch button{border:1px solid #2F4466;background:#16233A;color:#E6EEF9;border-radius:999px;padding:6px 11px;font-size:12.5px}
+@media(min-width:800px){.wel{left:auto;right:20px;width:400px;bottom:40px}}
 @media(min-width:800px){.panel{left:auto;right:20px;bottom:20px;width:400px}}
 </style></head><body>
 <canvas id="c"></canvas>
 <div class="load" id="load">Model yükleniyor…</div>
-<div class="top"><div class="brand"><div class="lg">K</div><div><b>Klinik Adınız</b><small>Hastalığını yaz, vücutta gör</small></div></div>
+<div class="top"><div class="brand"><div class="lg">A</div><div><b>Creamodul Anatomi</b><small>Hastalığını yaz, vücutta gör</small></div></div>
 <div class="sbox"><input id="q" placeholder="Hastalık veya organ ara: kalp krizi, bel fıtığı…" autocomplete="off"><ul id="sug"></ul></div></div>
-<div class="hint" id="hint">Parmakla döndür · iki parmakla yakınlaştır</div>
+<div class="hint" id="hint">Döndür · yakınlaştır · parçaya dokunarak adını gör</div><div class="tip" id="tip"></div><div class="toast" id="toast"></div>
 <div class="panel" id="panel"><div class="t"><div><h2 id="pT"></h2><div class="lat" id="pL"></div></div><div class="acts"><button class="x" id="pv" title="Sesli anlat">🔊</button><button class="x" id="psh" title="Paylaş / QR">⤴</button><button class="x" id="px">✕</button></div></div>
 <div class="tl"><button id="pl">▶</button><div style="flex:1"><input type="range" id="pg" min="0" max="100" value="0"><div class="tlb"><span>Sağlıklı</span><b id="ph">Sağlıklı</b><span>Hastalık</span></div></div></div>
 <div class="mc" id="mc"><svg id="mcS" viewBox="0 0 160 160"></svg><div><b id="mcT"></b><span id="mcC"></span></div><button id="mcx" hidden></button></div><p id="pD"></p><button id="pM">Devamını oku</button><div class="chips" id="pC"></div></div>
 <div class="shm" id="shm"><div class="shb"><b>Bu görünümü paylaş</b><p>Telefon kamerasıyla okutun; sayfa aynı hastalıkla açılır.</p><div id="qrb"></div><input id="shl" readonly><div class="shr"><button id="shc">Bağlantıyı kopyala</button><button id="shx">Kapat</button></div></div></div>
+<div class="wel" id="wel"><h3>Hastalığını yaz, vücudunda gör.</h3><p>Hastalar ve aileleri, doktorlar ve tıp öğrencileri için 3D hastalık anlatımı. Hastalığı arayın; model ilgili organa yaklaşsın ve hastalığın nasıl geliştiğini adım adım gösterin.</p><div class="wch" id="wch"></div><small>Bilgilendirme amaçlıdır; tanı veya tedavi önerisi içermez.</small></div>
 <div class="lic">3D modeller: <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/" target="_blank">BodyParts3D</a> © DBCLS, CC BY-SA 2.1 JP · düzenlenmiş hâli CC BY-SA 4.0</div>
 
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
@@ -113,10 +121,10 @@ const DZ=[
   focus:["aorta"],hi:["aorta"],
   d:"Vücudun ana atardamarı olan aortun duvarı zayıflar ve bir bölümü balon gibi genişler. Görselde göğüsten aşağı inen aortun üzerindeki şişkinliği görüyorsunuz.",fx:"bulge"},
  {id:"mi",n:"Kalp krizi",lat:"Miyokard enfarktüsü · I21",syn:["kalp krizi","miyokard enfarktüsü","enfarktüs","mi","kalp spazmı"],
-  focus:["heart","lad"],hi:["heart","lad","lcx","rca"],micro:"art-mi",
+  focus:["heart","lad"],hi:["heart","lad","lcx","rca","hd_cor_art"],micro:"art-mi",
   d:"Kalbi besleyen damarlardan (koroner damarlar) birinin içinde yıllar içinde yağlı bir plak birikir. Plak çatlayınca üstünde pıhtı oluşur ve damarı tıkar. O damarın beslediği kalp kası kansız ve oksijensiz kalır. Görselde sarı plağı, üstündeki koyu pıhtıyı ve kararan kalp kası bölgesini görüyorsunuz.",fx:"mi"},
  {id:"cad",n:"Koroner arter hastalığı",lat:"Koroner damar sertliği · I25",syn:["koroner arter hastalığı","damar sertliği","ateroskleroz","kalp damar tıkanıklığı","koroner"],
-  focus:["heart","lad"],hi:["heart","lad","lcx","rca"],micro:"art",
+  focus:["heart","lad"],hi:["heart","lad","lcx","rca","hd_cor_art"],micro:"art",
   d:"Kalbi besleyen damarların iç duvarında yağ, kolesterol ve hücre artıklarından oluşan plaklar birikir. Damar içi daralır ve kalp kasına giden kan azalır. Görselde damarlar boyunca biriken sarı plakları görüyorsunuz.",fx:"cad"},
  {id:"hf",n:"Kalp yetmezliği",lat:"Kalp yetmezliği · I50",syn:["kalp yetmezliği","kalp büyümesi","kardiyomiyopati"],
   focus:["heart","lung_LL"],hi:["heart"],
@@ -157,7 +165,10 @@ const DZ=[
  {id:"crc",n:"Kalın bağırsakta kitle",lat:"Kolorektal tümör · C18",syn:["kolon kanseri","kalın bağırsak kanseri","bağırsak kanseri","kolon tümörü","bağırsakta kitle"],
   focus:["colon"],hi:["colon"],a:{k:"colon",dir:[-1,.05,.35],side:[1,-10],op:.6,off:[4,0,0],r:13,col:0x5a1426,em:0x3a0612,L:pt=>[[pt,"Bağırsak duvarında büyüyen kitle",-1,.4],[ctrOf("colon").add(new THREE.Vector3(30,30,0)),"Kalın bağırsak",1,0]]},
   d:"Kalın bağırsağın iç duvarındaki hücreler kontrolsüz çoğalarak bir kitle oluşturur. Kitle büyüdükçe bağırsak içini daraltabilir. Görselde bağırsak duvarındaki koyu kitleyi görüyorsunuz.",fx:"mass"}
-
+,
+ {id:"app",n:"Apandisit",lat:"Akut apandisit · K35",syn:["apandisit","apandis","kör bağırsak iltihabı","apandisit ağrısı"],
+  focus:["hd_appendix","colon"],hi:["hd_appendix","colon"],
+  d:"Kalın bağırsağın başlangıcından çıkan küçük, parmak şeklindeki apandisin içi tıkanır. İçeride mikroplar çoğalır, apandis şişer ve iltihaplanır. Görselde şişip kızaran apandisi ve içinde biriken iltihabı görüyorsunuz.",fx:"appendicitis"}
 ];
 
 const fx=new THREE.Group();let pulse=null,anim=null;const labels=[];
@@ -165,7 +176,53 @@ R.localClippingEnabled=true;
 function reg(o){const k=o.name.replace(/_\d+$/,"");const c=COL[k]??0xcccccc;
   o.geometry.computeVertexNormals();
   o.material=new THREE.MeshStandardMaterial({color:c,roughness:k==="ribs"?.7:.55,metalness:0,transparent:true,opacity:k==="skin"?.12:k.startsWith("lung")?.82:1,depthWrite:k!=="skin",side:k==="skin"?THREE.FrontSide:THREE.DoubleSide});
-  M[k]=o;base[k]={c,op:o.material.opacity,s:o.scale.clone(),p:o.position.clone(),pos:o.geometry.attributes.position.array.slice(),mat:o.material};}
+  o.userData.k=k;M[k]=o;base[k]={c,op:o.material.opacity,s:o.scale.clone(),p:o.position.clone(),pos:o.geometry.attributes.position.array.slice(),mat:o.material};}
+
+// ---------- yakınlaştıkça yüklenen ayrıntı paketleri ----------
+const HDM={"hd_pa": {"n": "Akciğer atardamar dalları", "c": 5210080, "pack": "lung"}, "hd_pv": {"n": "Akciğer toplardamar dalları", "c": 14240602, "pack": "lung"}, "hd_portal": {"n": "Kapı toplardamarı (portal ven)", "c": 8280002, "pack": "liver"}, "hd_hepv": {"n": "Karaciğer toplardamarları", "c": 5210080, "pack": "liver"}, "hd_hepa": {"n": "Karaciğer atardamarları", "c": 14692415, "pack": "liver"}, "hd_bile": {"n": "Safra yolları", "c": 7311162, "pack": "liver"}, "hd_appendix": {"n": "Apandis", "c": 14192518, "pack": "abd"}, "hd_rectum": {"n": "Rektum", "c": 13605500, "pack": "abd"}, "hd_pduct": {"n": "Pankreas kanalı", "c": 16178314, "pack": "abd"}, "hd_ureter": {"n": "İdrar kanalları (üreter)", "c": 15123066, "pack": "abd"}, "hd_adrenal": {"n": "Böbreküstü bezleri", "c": 14922364, "pack": "abd"}, "hd_renal_art": {"n": "Böbrek atardamar dalları", "c": 14692415, "pack": "abd"}, "hd_vert_t": {"n": "Sırt omurları", "c": 15656662, "pack": "spine"}, "hd_vert_c": {"n": "Boyun omurları", "c": 15656662, "pack": "spine"}, "hd_disc_t": {"n": "Sırt diskleri", "c": 10471398, "pack": "spine"}, "hd_ventr34": {"n": "3. ve 4. karıncık", "c": 8369896, "pack": "brain"}, "hd_vertart": {"n": "Omur atardamarları", "c": 14238543, "pack": "brain"}, "hd_valves": {"n": "Kalp kapakçıkları", "c": 15984328, "pack": "heart"}, "hd_papillary": {"n": "Papiller kaslar", "c": 14185340, "pack": "heart"}, "hd_cor_art": {"n": "Koroner atardamarlar", "c": 14692415, "pack": "heart"}, "hd_cor_vein": {"n": "Kalp toplardamarları", "c": 5210080, "pack": "heart"}};
+for(const k in HDM){COL[k]=HDM[k].c;NAME[k]=HDM[k].n}
+const PACKS={heart:["heart","lad","lcx","rca"],lung:["lung_RU","lung_RM","lung_RL","lung_LU","lung_LL","bronchus","trachea","pulm_artery","pulm_vein"],
+ liver:["liver","gallbladder"],abd:["stomach","pancreas","kidney_R","kidney_L","colon","small_int","duodenum","bladder","spleen"],spine:["vert_L","disc_L1","disc_L2","disc_L3","disc_L4","disc_L5"],brain:["brain","ventricles","cerebellum","brainstem","mca_L","mca_R"]};
+const PSTATE={};const HIDE_HD={heart:["lad","lcx","rca"]};
+function packOf(k){for(const p in PACKS)if(PACKS[p].includes(k))return p;return HDM[k]?HDM[k].pack:null}
+function toast(t){const e=document.getElementById("toast");if(!e)return;e.textContent=t;e.classList.toggle("on",!!t)}
+function loadPack(p){if(!p||PSTATE[p])return PSTATE[p]&&PSTATE[p].pr;let res;const pr=new Promise(r=>res=r);PSTATE[p]={pr,done:false};toast("Ayrıntılar yükleniyor…");
+ new GLTFLoader().load("models/hd_"+p+".glb",g=>{const ms=[];g.scene.traverse(o=>{if(o.isMesh)ms.push(o)});
+  ms.forEach(o=>{const n=o.name.replace(/_\d+$/,"");if(n.startsWith("hi_")){const k=n.slice(3);if(M[k]){const old=M[k].geometry;M[k].geometry=o.geometry;M[k].geometry.computeVertexNormals();base[k].pos=o.geometry.attributes.position.array.slice();M[k]._def=false;old.dispose()}}
+   else{root.add(o);o.position.set(0,0,0);o.rotation.set(0,0,0);o.scale.set(1,1,1);o.name=n;reg(o)}});
+  (HIDE_HD[p]||[]).forEach(k=>{if(M[k]){M[k]._hidden=true;M[k].visible=false}});root.updateMatrixWorld(true);
+  PSTATE[p].done=true;for(const k in BX)delete BX[k];toast("");if(curD){const q=P,pl=playing;apply();setP(q);if(pl)play()}res()},undefined,()=>{toast("");res()});return pr}
+let lastNear=0;function nearCheck(t){if(t-lastNear<500||!root)return;lastNear=t;const d=cam.position.distanceTo(ctl.target);if(d>520)return;
+ let best=null,bd=1e9;for(const p in PACKS){if(PSTATE[p])continue;for(const k of PACKS[p]){if(!M[k])continue;const c=ctrOf(k);const dd=c.distanceTo(ctl.target);if(dd<bd){bd=dd;best=p}}}
+ if(best&&bd<170)loadPack(best)}
+// dokununca parça adı
+const ray2=new THREE.Raycaster(),tipP=new THREE.Vector3();let tipK=null,tipT=0,pdown=null;
+R.domElement.addEventListener("pointerdown",e=>{pdown=[e.clientX,e.clientY];const wl=document.getElementById("wel");if(wl&&!curD)wl.style.display="none"});
+R.domElement.addEventListener("pointerup",e=>{if(!pdown||Math.hypot(e.clientX-pdown[0],e.clientY-pdown[1])>6)return;
+ const r=R.domElement.getBoundingClientRect();ray2.setFromCamera({x:(e.clientX-r.left)/r.width*2-1,y:-(e.clientY-r.top)/r.height*2+1},cam);
+ const cand=Object.keys(M).filter(k=>k!=="skin"&&M[k].visible&&M[k].material.opacity>.13).map(k=>M[k]);const hit=ray2.intersectObjects(cand,false)[0];
+ if(hit){tipK=Object.keys(M).find(k=>M[k]===hit.object);tipP.copy(hit.point);tipT=performance.now();loadPack(packOf(tipK))}else tipK=null});
+const XR=["heart","liver","kidney_R","kidney_L","stomach"];let lastX=0;const BX={};let faded=new Set();
+function bx(k){if(!BX[k]){BX[k]=new THREE.Box3().setFromObject(M[k])}return BX[k]}
+let lastCP=new THREE.Vector3(1e9,0,0),lastTG=new THREE.Vector3();function xray(t){if(t-lastX<250||!root)return;lastX=t;if(cam.position.distanceTo(lastCP)<1&&ctl.target.distanceTo(lastTG)<1)return;lastCP.copy(cam.position);lastTG.copy(ctl.target);
+ if(curD){faded.clear();return}
+ const tg=ctl.target,cd=cam.position.distanceTo(tg);
+ // hedefe en yakın organ
+ let main=null,md=1e9;for(const k in M){if(k==="skin"||k.startsWith("hd_")||!M[k].visible)continue;const b=bx(k);const d=b.distanceToPoint(tg);const sz=b.getSize(new THREE.Vector3()).length();if(d<md||(d===md&&sz<bx(main).getSize(new THREE.Vector3()).length())){md=d;main=k}}
+ const now=new Set();
+ if(cd<420&&main){const mb=bx(main),mr=mb.getSize(new THREE.Vector3()).length()*.18,mc=mb.getCenter(new THREE.Vector3());
+  const up=cam.up.clone(),dir=mc.clone().sub(cam.position).normalize(),rt=new THREE.Vector3().crossVectors(dir,up).normalize(),u2=new THREE.Vector3().crossVectors(rt,dir);
+  const cand=Object.keys(M).filter(k=>k!=="skin"&&M[k].visible).map(k=>M[k]);const rc=new THREE.Raycaster();
+  [[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(([a,b])=>{const tp=mc.clone().addScaledVector(rt,a*mr).addScaledVector(u2,b*mr);rc.set(cam.position,tp.clone().sub(cam.position).normalize());
+   for(const h of rc.intersectObjects(cand,false)){const k=h.object.userData.k;if(k===main)break;if(k&&!k.startsWith("hd_"))now.add(k)}})}
+ for(const k in M){if(k==="skin")continue;const m=M[k].material,b=base[k];
+  if(now.has(k)){m.opacity=.1;m.depthWrite=false}
+  else if(XR.includes(k)){const bb=bx(k),c=bb.getCenter(new THREE.Vector3()),rr=bb.getSize(new THREE.Vector3()).length()/2;const k2=Math.min(1,Math.max(0,(cam.position.distanceTo(c)-rr*1.6)/(rr*2.2)));m.opacity=b.op*(.35+.65*k2);m.depthWrite=k2>.9}
+  else if(faded.has(k)){m.opacity=b.op;m.depthWrite=true}}
+ faded=now}
+function drawTip(t){const e=document.getElementById("tip");if(!e)return;if(!tipK||t-tipT>4500){e.style.display="none";return}
+ const v=tipP.clone().project(cam);e.style.display="block";e.textContent=NAME[tipK]||tipK;e.style.left=((v.x+1)/2*innerWidth)+"px";e.style.top=((1-v.y)/2*innerHeight)+"px"}
+
 let extraOK=false,pendingPick=null;
 new GLTFLoader().load("models/thorax.glb",g=>{
  root=g.scene;root.rotation.x=-Math.PI/2;S.add(root);S.add(fx);root.updateMatrixWorld(true);
@@ -214,9 +271,9 @@ function patchy(m,col2,scale=.045,thr=.15){m.onBeforeCompile=sh=>{sh.uniforms.c2
  diffuseColor.rgb=mix(diffuseColor.rgb,c2,k);`)};m.needsUpdate=true}
 
 function reset(){for(const k in M){const o=M[k],b=base[k];o.material=b.mat;if(b.mat._p){b.mat.onBeforeCompile=()=>{};b.mat.customProgramCacheKey=()=>"";b.mat._p=false;b.mat.needsUpdate=true}o.material.color.setHex(b.c);o.material.opacity=b.op;o.material.emissive.setHex(0);o.material.depthWrite=k!=="skin";
-  o.scale.copy(b.s);o.position.copy(b.p);o.visible=true;const pa=o.geometry.attributes.position;if(pa.array!==b.pos&&pa.array.length===b.pos.length&&o._def){pa.array.set(b.pos);pa.needsUpdate=true;o.geometry.computeVertexNormals();o._def=false}}
+  o.scale.copy(b.s);o.position.copy(b.p);o.visible=!o._hidden;const pa=o.geometry.attributes.position;if(pa.array!==b.pos&&pa.array.length===b.pos.length&&o._def){pa.array.set(b.pos);pa.needsUpdate=true;o.geometry.computeVertexNormals();o._def=false}}
  root&&root.updateMatrixWorld(true);fx.clear();pulse=null;anim=null;labels.length=0;}
-function dim(except){for(const k in M){if(k==="skin")continue;if(!except.includes(k))M[k].material.opacity=Math.min(M[k].material.opacity,k==="ribs"?.06:.14)}}
+function dim(except){for(const k in M){if(k==="skin")continue;if(!except.includes(k)){M[k].material.opacity=Math.min(M[k].material.opacity,k==="ribs"?.06:.14);M[k].material.depthWrite=false}}}
 
 // ---------- hastalık sahneleri (her biri ilerleme fonksiyonu döndürür, p: 0 sağlıklı → 1 tam hastalık) ----------
 const sm=(a,b,p)=>{const t=Math.min(1,Math.max(0,(p-a)/(b-a)));return t*t*(3-2*t)};
@@ -235,13 +292,14 @@ function patchyU(m,col2,scale){const U={c2:{value:new THREE.Color(col2)},amt:{va
   return mix(mix(mix(h(i),h(i+vec3(1,0,0)),f.x),mix(h(i+vec3(0,1,0)),h(i+vec3(1,1,0)),f.x),f.y),mix(mix(h(i+vec3(0,0,1)),h(i+vec3(1,0,1)),f.x),mix(h(i+vec3(0,1,1)),h(i+vec3(1,1,1)),f.x),f.y),f.z);}`)
  .replace("#include <color_fragment>",`#include <color_fragment>
  float nn=n3(vW*${scale.toFixed(3)})*.65+n3(vW*${(scale*2.7).toFixed(3)})*.35;float k=smoothstep(1.02-amt*.75,1.1-amt*.75,nn+ .0);
- diffuseColor.rgb=mix(diffuseColor.rgb,c2,k);`)};m.customProgramCacheKey=()=>"pu"+scale;m._p=true;m.needsUpdate=true;return U}
+ diffuseColor.rgb=mix(diffuseColor.rgb,c2,k);`)};const ck="pu"+scale+"_"+(++PCK);m.customProgramCacheKey=()=>ck;m._p=true;m.needsUpdate=true;return U}
 
 function nearV(key,pt){const o=M[key],a=o.geometry.attributes.position,v=new THREE.Vector3();o.updateMatrixWorld();let best=pt.clone(),bd=1e9;
  for(let i=0;i<a.count;i+=2){v.fromBufferAttribute(a,i).applyMatrix4(o.matrixWorld);const d=v.distanceTo(pt);if(d<bd){bd=d;best=v.clone()}}return best}
 function seedsIn(key,n,r,col){const o=M[key],a=o.geometry.attributes.position,c=ctrOf(key),v=new THREE.Vector3(),out=[];o.updateMatrixWorld();
  for(let i=0;i<n;i++){v.fromBufferAttribute(a,Math.floor(Math.random()*a.count)).applyMatrix4(o.matrixWorld);v.lerp(c,.45+Math.random()*.45);
   const m=addMesh(blob(r*(.6+Math.random()*.7),1+Math.random()*3),mat(col,1,{roughness:.7}),v.clone());m.scale.setScalar(.001);m.userData.d=Math.random();out.push(m)}return out}
+let PCK=0;
 const NOISE=`float h(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}
  float n3(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
   return mix(mix(mix(h(i),h(i+vec3(1,0,0)),f.x),mix(h(i+vec3(0,1,0)),h(i+vec3(1,1,0)),f.x),f.y),mix(mix(h(i+vec3(0,0,1)),h(i+vec3(1,0,1)),f.x),mix(h(i+vec3(0,1,1)),h(i+vec3(1,1,1)),f.x),f.y),f.z);}`;
@@ -250,7 +308,7 @@ function regionU(m,ctr,col2,R){const U={c2:{value:new THREE.Color(col2)},amt:{va
  sh.fragmentShader=sh.fragmentShader.replace("#include <common>","#include <common>\nvarying vec3 vW;uniform vec3 c2;uniform float amt;uniform vec3 ct;\n"+NOISE)
  .replace("#include <color_fragment>",`#include <color_fragment>
  float nn=n3(vW*.09)*.6+n3(vW*.23)*.4;float rr=${R.toFixed(1)}*amt;float k=amt>.01?1.-smoothstep(rr-3.,rr+3.,distance(vW,ct)+(nn-.5)*${R.toFixed(1)}*.5):0.;
- diffuseColor.rgb=mix(diffuseColor.rgb,c2,k);`)};m.customProgramCacheKey=()=>"rg"+R;m._p=true;m.needsUpdate=true;return U}
+ diffuseColor.rgb=mix(diffuseColor.rgb,c2,k);`)};const ck="rg"+R+"_"+(++PCK);m.customProgramCacheKey=()=>ck;m._p=true;m.needsUpdate=true;return U}
 
 const FX={
  collapse(){const pv=ctrOf("bronchus").lerp(ctrOf("lung_RM"),.3);const sh=RIGHT.map(k=>ghost(k,1.0,0xbfe0ff,0,null,{emissive:0x0a2a55}));const s0=Object.fromEntries(RIGHT.map(k=>[k,snap(k)]));
@@ -297,6 +355,9 @@ const FX={
   return p=>{const k=sm(.05,1,p);idx.forEach(([i,w])=>{const f=1+1.25*w*k;arr[i*3]=cx+(orig[i*3]-cx)*f;arr[i*3+1]=cy+(orig[i*3+1]-cy)*f});pa.needsUpdate=true;o.geometry.computeVertexNormals();
    lerpC(o.material,0xd94b5a,0xb3303d,k);return L}}
  ,
+ appendicitis(){const s0=snap("hd_appendix"),pv=ctrOf("hd_appendix");const pus=seedsIn("hd_appendix",14,1.6,0xe6cf72);const g=ghost("hd_appendix",1.35,0xd8343c,0,pv);
+  const L=[[ctrOf("colon").add(new THREE.Vector3(-10,25,0)),"Kalın bağırsak (çekum)",1,0],[pv,"Tıkanan ve şişen apandis",-1,.35],[pv.clone().add(new THREE.Vector3(0,-10,4)),"İçeride biriken iltihap",1,.6],[pv.clone().add(new THREE.Vector3(8,6,0)),"Çevre dokuya yayılan iltihap",1,.85]];
+  return p=>{const k=sm(.05,.8,p);shrinkTo("hd_appendix",s0,1+.55*k,pv);lerpC(M.hd_appendix.material,0xd88f86,0xd02d33,k);M.hd_appendix.material.emissive.setRGB(.25*k,0,0);grow(pus,p,.3,.85);g.material.opacity=.2*sm(.75,1,p);return L}},
  mi(){const pt=nearV("lad",ctrOf("lad").add(new THREE.Vector3(0,6,0)));
   const pl=addMesh(blob(4.2,2),mat(0xf2d27a,1,{roughness:.6}),pt);pl.scale.setScalar(.001);
   const cl=addMesh(blob(3.8,3),mat(0x4a0710,1,{roughness:.8}),pt.clone().add(new THREE.Vector3(1,0,1.5)));cl.scale.setScalar(.001);
@@ -355,7 +416,7 @@ const FX={
 
 };
 let curD=null,sick=true,step=null,P=0,playing=false,pT0=0;const DUR=7000;
-function apply(){reset();step=null;if(!curD)return;const z=curD;dim([...z.hi,...z.focus]);z.hi.forEach(k=>{M[k].material.opacity=1});
+function apply(){reset();step=null;if(!curD)return;const z=curD;dim([...z.hi,...z.focus]);z.hi.forEach(k=>{if(M[k])M[k].material.opacity=1});
  if(FX[z.fx])step=FX[z.fx](z);setP(sick?P:0)}
 function setP(p){P=p;labels.length=0;if(step){const L=step(p)||[];L.forEach(([pt,t,side,at])=>{if(p>=at)labels.push({p:pt,t,side})})}
  const sl=document.getElementById("pg");if(sl)sl.value=Math.round(p*100);if(curD&&curD.micro)micro(curD.micro,p);const ph=document.getElementById("ph");if(ph)ph.textContent=p<.02?"Sağlıklı":p>.98?"Hastalık tam gelişmiş":"Süreç ilerliyor…";}
@@ -414,12 +475,12 @@ q.addEventListener("input",search);q.addEventListener("focus",search);
 q.addEventListener("keydown",e=>{if(e.key==="Enter"&&list[act])pick(list[act]);if(e.key==="ArrowDown"){act=Math.min(act+1,list.length-1);mark()}if(e.key==="ArrowUp"){act=Math.max(act-1,0);mark()}});
 function mark(){[...sug.children].forEach((li,i)=>li.classList.toggle("act",i===act))}
 sug.addEventListener("click",e=>{const li=e.target.closest("li[data-i]");if(li)pick(list[+li.dataset.i])});
-function pick(d){if(!extraOK&&d.focus.some(k=>!M[k])){pendingPick=d;q.value=d.n+" · yükleniyor…";sug.style.display="none";q.blur();return}
+function pick(d){const need=[...new Set([...d.focus,...d.hi].map(packOf).filter(Boolean))];const miss=[...d.focus,...d.hi].filter(k=>!M[k]);if(miss.length&&extraOK){Promise.all(need.map(loadPack)).then(()=>{if([...d.focus,...d.hi].every(k=>M[k]))pick(d)});return}need.forEach(loadPack);const wl=document.getElementById('wel');if(wl)wl.style.display='none';if(!extraOK&&d.focus.some(k=>!M[k])){pendingPick=d;q.value=d.n+" · yükleniyor…";sug.style.display="none";q.blur();return}
  window.speechSynthesis&&speechSynthesis.cancel();document.getElementById("mc").classList.toggle("on",!!d.micro);
  try{history.replaceState(null,"","?d="+d.id)}catch(e){}
  curD=d;sick=true;q.value=d.n;sug.style.display="none";q.blur();
  document.getElementById("pT").textContent=d.n;document.getElementById("pL").textContent=d.lat;document.getElementById("pD").textContent=d.d;document.getElementById("pD").classList.remove("open");document.getElementById("pM").textContent="Devamını oku";
- document.getElementById("pC").innerHTML=d.hi.filter((k,i,a)=>!(k.startsWith("lung")&&a.filter(x=>x.startsWith("lung")).length>2&&i>0)).filter((k,i,a)=>a.findIndex(x=>a2(x,d)===a2(k,d))===i).map(k=>`<span><i style="background:#${COL[k].toString(16).padStart(6,"0")}"></i>${a2(k,d)}</span>`).join("");
+ document.getElementById("pC").innerHTML=d.hi.filter(k=>M[k]&&!M[k]._hidden).filter((k,i,a)=>!(k.startsWith("lung")&&a.filter(x=>x.startsWith("lung")).length>2&&i>0)).filter((k,i,a)=>a.findIndex(x=>a2(x,d)===a2(k,d))===i).map(k=>`<span><i style="background:#${COL[k].toString(16).padStart(6,"0")}"></i>${a2(k,d)}</span>`).join("");
  document.getElementById("panel").classList.add("on");document.getElementById("hint").style.display="none";P=0;apply();flyTo(d.focus,d.side||0);setTimeout(play,900);}
 const a2=(k,d)=>d.hi.filter(x=>x.startsWith("lung")).length>2&&k.startsWith("lung")?"Akciğerler":NAME[k];
 document.getElementById("pM").onclick=()=>{const e=document.getElementById("pD");e.classList.toggle("open");document.getElementById("pM").textContent=e.classList.contains("open")?"Daha az göster":"Devamını oku"};
@@ -434,7 +495,7 @@ document.getElementById("psh").onclick=async()=>{if(!curD)return;const url=locat
  try{const qr=await loadQR();const c=qr(0,"M");c.addData(url);c.make();document.getElementById("qrb").innerHTML=c.createImgTag(6,8)}catch(e){document.getElementById("qrb").textContent="QR yüklenemedi"}};
 document.getElementById("shx").onclick=()=>document.getElementById("shm").classList.remove("on");
 document.getElementById("shc").onclick=async()=>{const u=document.getElementById("shl").value;try{if(navigator.share){await navigator.share({title:curD.n,url:u});return}await navigator.clipboard.writeText(u);document.getElementById("shc").textContent="Kopyalandı ✓"}catch(e){document.getElementById("shl").select()}};
-document.getElementById("px").onclick=()=>{stop();window.speechSynthesis&&speechSynthesis.cancel();document.getElementById("mc").classList.remove("on");try{history.replaceState(null,"",location.pathname)}catch(e){}curD=null;step=null;reset();document.getElementById("panel").classList.remove("on");q.value="";
+document.getElementById("px").onclick=()=>{const wl=document.getElementById("wel");if(wl)wl.style.display="";stop();window.speechSynthesis&&speechSynthesis.cancel();document.getElementById("mc").classList.remove("on");try{history.replaceState(null,"",location.pathname)}catch(e){}curD=null;step=null;reset();document.getElementById("panel").classList.remove("on");q.value="";
  if(home)fly={t0:performance.now(),dur:1100,fp:cam.position.clone(),ft:ctl.target.clone(),tp:home.p.clone(),tt:home.t.clone()}};
 
 (function loop(t){requestAnimationFrame(loop);
@@ -445,5 +506,7 @@ document.getElementById("px").onclick=()=>{stop();window.speechSynthesis&&speech
   if(pulse.t==="squeeze"){M.bronchus.material.emissive.setRGB(.3*s,.12*s,0)}
   if(pulse.t==="scale")pulse.o.scale.setScalar(1+.1*s);
   if(pulse.t==="halo"){pulse.o.material.opacity=.08+.16*s;pulse.o.scale.setScalar(1+.15*s)}}
- ctl.update();R.render(S,cam);drawLabels();})(0);
+ nearCheck(t);xray(t);ctl.update();R.render(S,cam);drawLabels();drawTip(t);})(0);
+document.getElementById("wch").innerHTML=["mi","str","ptx","lhd","pnm","gs"].map(id=>{const d=DZ.find(x=>x.id===id);return d?`<button data-id="${id}">${d.n}</button>`:""}).join("");
+document.getElementById("wch").onclick=e=>{const b=e.target.closest("button");if(b)pick(DZ.find(x=>x.id===b.dataset.id))};
 </script></body></html>
